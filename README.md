@@ -25,7 +25,7 @@ A full-stack CRUD application built with Next.js. Includes JWT-based authenticat
 
 ## API Testing
 All backend endpoints can be tested using the included Postman collection:  
-`/postman_collection.json`
+`/CRUD.postman_collection.json`
 
 ---
 
