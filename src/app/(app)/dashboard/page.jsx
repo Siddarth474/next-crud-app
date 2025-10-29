@@ -1,0 +1,100 @@
+"use client"
+
+import Header from '@/components/layout/Header'
+import TaskCard from '@/components/ui/TaskCard'
+import TaskForm from '@/components/ui/TaskForm'
+import { TaskApi } from '@/context/TaskContext'
+import { handleFailure, handleSuccess } from '@/lib/notification'
+import axios from 'axios'
+import { BookX } from 'lucide-react'
+import React, { useContext, useEffect, useState } from 'react'
+
+const page = () => {
+
+  const {taskList, setTaskList} = useContext(TaskApi);
+  const [showPopUp, setShowPopUp] = useState(false);
+  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [filteredTasks, setFilteredTasks] = useState(taskList);
+
+
+  useEffect(() => {
+    const getTask = async () => {
+      try {
+        const res = await axios.get("/api/tasks");
+        const {success, tasks} = res.data;
+
+        if(success) {
+          setTaskList(tasks);
+        }
+        handleSuccess('All tasks fetched');
+      } catch (error) {
+        
+        if(error.response) {
+          const data = error.response.data;
+          handleFailure(data.error || "Invalid credentials");
+        }
+        else {
+          console.log('Error in issue submit', error.message);
+          handleFailure("Network error something went wrong" || error.message);
+        }
+      }
+    };
+    getTask();
+  }, []);
+
+
+  return (
+    <div className='w-full min-h-screen bg-indigo-100 overflow-auto'>
+      <Header 
+      setShowPopUp={setShowPopUp} 
+      setFilteredTasks={setFilteredTasks} 
+      setSelectedStatus={selectedStatus} 
+      />
+      <div className='p-5 w-full'>
+        <div className='px-5 relative'>
+          {showPopUp && <TaskForm setShowPopUp={setShowPopUp} />}
+        </div>
+
+        {filteredTasks.length && (<div className="flex flex-col sm:flex-row gap-1 sm:gap-3 my-4 ml-3">
+          <label htmlFor="status" className="text-gray-800 text-lg font-semibold">
+            Filter by Status:
+          </label>
+
+          <select
+            id="status"
+            value={selectedStatus}
+            onChange={(e) => setSelectedStatus(e.target.value)}
+            className="px-4 py-2 rounded-lg border border-gray-300 bg-white text-gray-800 max-w-[150px] w-full
+            shadow-sm focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all duration-200"
+          >
+            <option value="all">All</option>
+            <option value="pending">Pending</option>
+            <option value="in-progress">In Progress</option>
+            <option value="completed">Completed</option>
+          </select>
+        </div>)}
+
+        <h1 className='text-2xl mb-3 sm:mb-0 text-black ml-3 font-semibold underline'>Your Tasks: </h1>
+        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center 
+        place-content-center md:p-5'>
+          {filteredTasks.length > 0 ? (
+              filteredTasks.map((task) => (
+                <TaskCard key={task._id} 
+                taskInfo={task} 
+                setShowPopUp={setShowPopUp} 
+                />
+              ))
+            ) : (
+              <p className="flex flex-col justify-center items-center gap-3 mt-4 font-semibold text-gray-600 col-span-full">
+                <BookX size={80}/>
+                No tasks found!
+              </p>
+          )}
+        </div>
+
+      </div>
+    </div>
+  )
+}
+
+export default page
