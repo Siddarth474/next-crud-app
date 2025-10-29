@@ -15,22 +15,23 @@ const page = () => {
   const [showPopUp, setShowPopUp] = useState(false);
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [filteredTasks, setFilteredTasks] = useState(taskList);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     const getTask = async () => {
       try {
-        
+        setLoading(true);
         const res = await axios.get("/api/tasks");
         const {success, tasks} = res.data;
 
         if(success) {
+          setLoading(false);
           setTaskList(tasks);
-    
           handleSuccess('All tasks fetched');
         }
       } catch (error) {
         if(error.response) {
-    
+          setLoading(false);
           const data = error.response.data;
           handleFailure(data.error || "Invalid credentials");
         }
@@ -76,21 +77,29 @@ const page = () => {
         </div>)}
 
         <h1 className='text-2xl mb-3 sm:mb-0 text-black ml-3 font-semibold underline'>Your Tasks: </h1>
-        <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center 
-        place-content-center md:p-5'>
-          {filteredTasks.length > 0 ? (
-              filteredTasks.map((task) => (
-                <TaskCard key={task._id} 
-                taskInfo={task} 
-                setShowPopUp={setShowPopUp} 
+        <div>
+            {loading ? (
+              <div className="flex flex-col justify-center items-center gap-3 mt-10 text-gray-600 font-medium">
+                <div className="animate-spin rounded-full h-12 w-12 border-4 border-indigo-500 border-t-transparent"></div>
+                <p>Loading tasks...</p>
+              </div>
+            ) : filteredTasks.length > 0 ? (
+              <div className='grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 items-center 
+              place-content-center md:p-5'>
+                {filteredTasks.map((task) => (
+                <TaskCard
+                  key={task._id}
+                  taskInfo={task}
+                  setShowPopUp={setShowPopUp}
                 />
-              ))
+              ))}
+              </div>
             ) : (
-              <p className="flex flex-col justify-center items-center gap-3 mt-4 font-semibold text-gray-600 col-span-full">
-                <BookX size={80}/>
-                No tasks found!
-              </p>
-          )}
+              <div className="flex flex-col justify-center items-center gap-3 mt-4 font-semibold text-gray-600 col-span-full">
+                <BookX size={80} />
+                <p>No tasks found!</p>
+              </div>
+            )}
         </div>
 
       </div>
