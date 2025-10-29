@@ -57,7 +57,7 @@ const page = () => {
           {showPopUp && <TaskForm setShowPopUp={setShowPopUp} />}
         </div>
 
-        {filteredTasks.length && (<div className="flex flex-col sm:flex-row gap-1 sm:gap-3 my-4 ml-3">
+        {taskList.length > 0 && (<div className="flex flex-col sm:flex-row gap-1 sm:gap-3 my-4 ml-3">
           <label htmlFor="status" className="text-gray-800 text-lg font-semibold">
             Filter by Status:
           </label>

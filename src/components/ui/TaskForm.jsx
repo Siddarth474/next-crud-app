@@ -6,7 +6,7 @@ import { TaskApi } from "@/context/TaskContext";
 
 
 const TaskForm = ({ setShowPopUp }) => {
-    const {setTaskList, task, setTask, editId, setEdiId} = useContext(TaskApi);
+    const {setTaskList, task, setTask, editId, setEditId} = useContext(TaskApi);
     const [loading, setLoading] = useState(false);
 
     const handleChange = (e) => {
@@ -62,7 +62,7 @@ const TaskForm = ({ setShowPopUp }) => {
                 );
                 setShowPopUp(false);
                 handleSuccess(message);
-                setEdiId('');
+                setEditId('');
                 setTask({
                     title: "",
                     description: "",
@@ -160,6 +160,7 @@ const TaskForm = ({ setShowPopUp }) => {
                             dueDate: "",
                             status: "pending",
                         });
+                        setEditId('');
                     }}
                     type="button" 
                     className="inline-flex items-center gap-2 px-4 py-2 rounded-md text-sm 
