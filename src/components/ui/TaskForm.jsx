@@ -168,7 +168,7 @@ const TaskForm = ({ setShowPopUp }) => {
                     </button>
                     <button type="submit"  
                     className="inline-flex items-center gap-2 px-5 py-2 rounded-lg bg-indigo-600 text-white font-semibold hover:bg-indigo-700 disabled:opacity-60">
-                        {loading ? <Loader2 size={18} /> : editId ? 'Edit' : 'Add' }
+                        {loading ? <Loader2 size={18} className="animate-spin" /> : editId ? 'Edit' : 'Add' }
                     </button>
                 </div>
             </div>

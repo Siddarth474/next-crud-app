@@ -13,7 +13,7 @@ const page = () => {
 
   const {taskList, setTaskList} = useContext(TaskApi);
   const [showPopUp, setShowPopUp] = useState(false);
-  const [selectedStatus, setSelectedStatus] = useState("all");
+  const [selectedStatus, setSelectedS tatus] = useState("all");
   const [filteredTasks, setFilteredTasks] = useState(taskList);
   const [loading, setLoading] = useState(false);
 
