@@ -16,20 +16,21 @@ const page = () => {
   const [selectedStatus, setSelectedStatus] = useState("all");
   const [filteredTasks, setFilteredTasks] = useState(taskList);
 
-
   useEffect(() => {
     const getTask = async () => {
       try {
+        
         const res = await axios.get("/api/tasks");
         const {success, tasks} = res.data;
 
         if(success) {
           setTaskList(tasks);
+    
+          handleSuccess('All tasks fetched');
         }
-        handleSuccess('All tasks fetched');
       } catch (error) {
-        
         if(error.response) {
+    
           const data = error.response.data;
           handleFailure(data.error || "Invalid credentials");
         }
@@ -48,7 +49,7 @@ const page = () => {
       <Header 
       setShowPopUp={setShowPopUp} 
       setFilteredTasks={setFilteredTasks} 
-      setSelectedStatus={selectedStatus} 
+      selectedStatus={selectedStatus} 
       />
       <div className='p-5 w-full'>
         <div className='px-5 relative'>
